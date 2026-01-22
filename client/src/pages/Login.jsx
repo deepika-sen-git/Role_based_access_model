@@ -1,7 +1,53 @@
+import axios from 'axios';
 import React from 'react'
+import { useState } from 'react';
 
 export const Login = () => {
+   const [formData, setFormData] = useState({
+      email: "",
+      password:""
+    });
+  
+    const handleChange = (e) => {
+    setFormData((prev) => ({
+      ...prev,
+      [e.target.name]: e.target.value,
+    }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      console.log(formData, "formData");
+      
+      const res = await axios.post("http://localhost:3000/login", formData);
+      console.log(res);
+
+      localStorage.setItem('token', res.data.token);
+
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   return (
-    <div>Login</div>
+    <>
+      <h1>Login</h1>
+      <form onSubmit={handleSubmit}>
+       
+        <div>
+          <label htmlFor="email">Email </label>
+          <input type="text" name="email" onChange={handleChange} />
+        </div>
+        <div>
+          <label htmlFor="password">Password </label>
+          <input type="text" name="password" onChange={handleChange} />
+        </div>
+      
+      <button type="submit">
+        Login
+      </button>
+      </form>
+    </>
   )
 }

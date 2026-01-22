@@ -6,6 +6,7 @@ export const Register = () => {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
+    password:"",
     phone: "",
     time: "",
     date: "",
@@ -26,6 +27,8 @@ export const Register = () => {
       
       const res = await axios.post("http://localhost:3000/register", formData);
       console.log(res);
+      localStorage.setItem('token', res.data.token);
+
     } catch (error) {
       console.log(error.message);
     }
@@ -33,7 +36,7 @@ export const Register = () => {
 
   return (
     <>
-      <h1>Register as Patient</h1>
+      <h1>Register</h1>
       <form onSubmit={handleSubmit}>
         <div>
           <label htmlFor="name">Full Name </label>
