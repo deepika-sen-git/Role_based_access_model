@@ -1,8 +1,10 @@
 import React from "react";
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
+  const navigate = useNavigate(); 
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -28,7 +30,7 @@ export const Register = () => {
       const res = await axios.post("http://localhost:3000/register", formData);
       console.log(res);
       localStorage.setItem('token', res.data.token);
-
+      navigate("/profile");
     } catch (error) {
       console.log(error.message);
     }

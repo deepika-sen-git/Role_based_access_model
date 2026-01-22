@@ -1,8 +1,10 @@
 import axios from 'axios';
 import React from 'react'
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const Login = () => {
+  const navigate = useNavigate();
    const [formData, setFormData] = useState({
       email: "",
       password:""
@@ -22,8 +24,8 @@ export const Login = () => {
       
       const res = await axios.post("http://localhost:3000/login", formData);
       console.log(res);
-
       localStorage.setItem('token', res.data.token);
+      navigate("/profile");
 
     } catch (error) {
       console.log(error.message);
