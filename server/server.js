@@ -10,6 +10,7 @@ const app = express();
 const dotenv = require("dotenv");
 const authRoutes = require("./routes/authRoute");
 const dbConnect = require("./config/dbConnect");
+const userRoutes = require("./routes/userRoute");
 
 app.use(express.json())
 app.use(cors({ origin: true }));
@@ -32,6 +33,7 @@ app.get("/", (req, res) => {
 // })
 // })
 app.use("/", authRoutes);
+app.use("/", userRoutes);
 
 // app.listen(3000, console.log("App is running on port 3000"))
 app.listen(PORT, console.log("App is running on port", PORT))
