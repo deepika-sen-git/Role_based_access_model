@@ -9,9 +9,6 @@ export const Register = () => {
     name: "",
     email: "",
     password:"",
-    phone: "",
-    time: "",
-    date: "",
     role: "",
   });
 
@@ -52,7 +49,7 @@ export const Register = () => {
           <label htmlFor="password">Password </label>
           <input type="text" name="password" onChange={handleChange} />
         </div>
-        <div>
+        {/* <div>
           <label htmlFor="phone">Phone </label>
           <input
             type="number"
@@ -61,8 +58,8 @@ export const Register = () => {
             maxLength={15}
             onChange={handleChange}
           />
-        </div>
-        <div>
+        </div> */}
+        {/* <div>
           <label htmlFor="time">Time </label>
           <select id="time" name="time" onChange={handleChange}>
             <option value="6-9AM">6-9AM</option>
@@ -74,11 +71,11 @@ export const Register = () => {
             <option value="12AM-3AM">12AM-3AM</option>
             <option value="3-6AM">3-6AM</option>
           </select>
-        </div>
-        <div>
+        </div> */}
+        {/* <div>
           <label htmlFor="date">Date </label>
           <input type="date" name="date" onChange={handleChange} />
-        </div>
+        </div> */}
         <div>
           <label htmlFor="role">Register as </label>
           <input

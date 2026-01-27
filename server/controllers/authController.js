@@ -5,8 +5,8 @@ const generateToken = require("../utils/generateToken");
 
 const registerController =async (req, res) => {
      try {
-         const {name, phone, email, date, time, role, password} = req.body;
-    console.log({name, phone, email, date, time, role, password});
+         const {name, email, role, password} = req.body;
+    console.log({name, email, role, password});
 
     const userFound = await User.findOne({email});
     if(userFound){
@@ -17,7 +17,7 @@ const registerController =async (req, res) => {
     
     const hashedPassword = await bcrypt.hash(password, 10);
 
-    const user = await User.create({name, phone, email, date, time, role, password:hashedPassword});
+    const user = await User.create({name, email, role, password:hashedPassword});
 
     const token = generateToken(user._id);
 
@@ -41,6 +41,7 @@ const loginController =async (req, res) => {
     console.log({email, password});
 
     const user =await User.findOne({email});
+console.log(user, "user");
 
     if(!user){
        return res.json({
