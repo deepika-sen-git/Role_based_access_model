@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const dbConnect = async() => {
     try {
-        const db =await mongoose.connect("mongodb://localhost:27017/hospitalDB");
+        const db = await mongoose.connect(process.env.MONGO_URL);
         console.log("Connection established to", db.connection.host);
         
     } catch (error) {
