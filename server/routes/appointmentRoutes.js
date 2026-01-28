@@ -1,13 +1,12 @@
 const express = require("express");
-// const { profileController } = require("../controllers/profileController");
 const authMiddleware = require("../middlewares/authMiddleware");
-const { doctorController } = require("../controllers/doctorController");
+const { bookAppointments, getAllDoctors } = require("../controllers/appointmentController");
 
 const appointmentRoute = express.Router();
 
-appointmentRoute.post("/book", authMiddleware, bookAppointment);
-appointmentRoute.get("/my-appointments", authMiddleware, getMyAppointments);
-appointmentRoute.put("/status", authMiddleware, bookAppointment);
-
+appointmentRoute.post("/book", authMiddleware, bookAppointments);
+// appointmentRoute.get("/my-appointments", authMiddleware, getMyAppointments);
+// appointmentRoute.put("/status", authMiddleware, bookAppointment);
+appointmentRoute.get("/getDoctors", authMiddleware, getAllDoctors);
 
 module.exports = appointmentRoute;
