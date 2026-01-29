@@ -4,11 +4,11 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
-    password:"",
+    password: "",
     role: "",
   });
 
@@ -23,10 +23,10 @@ export const Register = () => {
     e.preventDefault();
     try {
       console.log(formData, "formData");
-      
+
       const res = await axios.post("http://localhost:3000/register", formData);
       console.log(res);
-      localStorage.setItem('token', res.data.token);
+      localStorage.setItem("token", res.data.token);
       navigate("/profile");
     } catch (error) {
       console.log(error.message);
@@ -34,12 +34,27 @@ export const Register = () => {
   };
 
   return (
-    <>
-      <h1>Register</h1>
+//     .container{
+//   border: 2px solid black;
+//   display: flex;
+//   justify-content: center;
+//   align-items: center;
+//   height: 100vh;
+// }
+
+    <div className="border flex justify-center items-center h-screen">
+      
       <form onSubmit={handleSubmit}>
+        <div className="form-container" >
+          <h1>Register</h1>
         <div>
           <label htmlFor="name">Full Name </label>
-          <input type="text" name="name" onChange={handleChange} />
+          <input
+            type="text"
+            name="name"
+            onChange={handleChange}
+            className="border"
+          />
         </div>
         <div>
           <label htmlFor="email">Email </label>
@@ -49,33 +64,6 @@ export const Register = () => {
           <label htmlFor="password">Password </label>
           <input type="text" name="password" onChange={handleChange} />
         </div>
-        {/* <div>
-          <label htmlFor="phone">Phone </label>
-          <input
-            type="number"
-            id="phone"
-            name="phone"
-            maxLength={15}
-            onChange={handleChange}
-          />
-        </div> */}
-        {/* <div>
-          <label htmlFor="time">Time </label>
-          <select id="time" name="time" onChange={handleChange}>
-            <option value="6-9AM">6-9AM</option>
-            <option value="9AM-12PM">9AM-12PM</option>
-            <option value="12-3PM">12-3PM</option>
-            <option value="3-6PM">3-6PM</option>
-            <option value="6-9PM">6-9PM</option>
-            <option value="9PM-12AM">9PM-12AM</option>
-            <option value="12AM-3AM">12AM-3AM</option>
-            <option value="3-6AM">3-6AM</option>
-          </select>
-        </div> */}
-        {/* <div>
-          <label htmlFor="date">Date </label>
-          <input type="date" name="date" onChange={handleChange} />
-        </div> */}
         <div>
           <label htmlFor="role">Register as </label>
           <input
@@ -96,10 +84,9 @@ export const Register = () => {
           <label htmlFor="role">Patient</label>
         </div>
 
-      <button type="submit">
-        Submit
-      </button>
+        <button type="submit">Submit</button>
+        </div>
       </form>
-    </>
+    </div>
   );
 };
