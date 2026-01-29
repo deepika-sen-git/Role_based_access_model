@@ -91,16 +91,37 @@ exports.getAllDoctors = async (req, res) => {
 
 exports.getAppointments = async (req, res) => {
   try {
-    // const userId = req.user._id; 
+    const userId = req.user._id; 
     const userRole = req.user.role; 
+
     let appointments = []; 
     if (userRole==="patient") {
-      appointments = await Appointment.find()
-      .populate("doctorId", "name email").sort({appointmentDate: -1})
+      const patient = await Patient.findOne({userId}); 
+      if (!patient) {
+        return res.status(404).json({
+          success: false,
+          message: "patient not found"
+        })
+      }
+      appointments = await Appointment.find({patientId: patient._id})
+      .populate({
+        path: "doctorId", 
+        populate: {path: "userId", select: "name email" }
+      }).sort({appointmentDate: -1})
     }
     else if(userRole === "doctor"){
-      appointments = await Appointment.find()
-      .populate("patientId", "name email").sort({appointmentDate: 1})
+      const doctor = await doctor.findOne({userId}); 
+      if (!doctor) {
+        return res.status(404).json({
+          success: false,
+          message: "doctor not found"
+        })
+      }
+      appointments = await Appointment.find({doctorId: doctor._id})
+       .populate({
+        path: "patientId", 
+        populate: {path: "userId", select: "name email" }
+      }).sort({appointmentDate: 1})
     }
 
     res.status(200).json({success: true, data: appointments}); 
@@ -108,3 +129,70 @@ exports.getAppointments = async (req, res) => {
     res.status(500).json({success: false, message: error.message }); 
   }
 }
+
+exports.updateAppointmentStatus = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { status } = req.body;
+    const { role, _id: userId } = req.user;
+
+    const appointment = await Appointment.findById(id);
+    if (!appointment) {
+      return res.status(404).json({
+        success: false,
+        message: "Appointment not found",
+      });
+    }
+
+    // PATIENT RULES
+    if (role === "patient") {
+      if (status !== "cancelled") {
+        return res.status(403).json({
+          success: false,
+          message: "Patient can only cancel appointment",
+        });
+      }
+
+      const patient = await Patient.findOne({ userId });
+      if (!patient || appointment.patientId.toString() !== patient._id.toString()) {
+        return res.status(403).json({
+          success: false,
+          message: "Not authorized to update this appointment",
+        });
+      }
+    }
+
+    // DOCTOR RULES
+    if (role === "doctor") {
+      const allowed = ["approved", "cancelled"];
+      if (!allowed.includes(status)) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid status",
+        });
+      }
+
+      const doctor = await Doctor.findOne({ userId });
+      if (!doctor || appointment.doctorId.toString() !== doctor._id.toString()) {
+        return res.status(403).json({
+          success: false,
+          message: "Not authorized to update this appointment",
+        });
+      }
+    }
+
+    appointment.status = status;
+    await appointment.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Appointment status updated successfully",
+      appointment,
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};
