@@ -11,6 +11,7 @@ const dotenv = require("dotenv");
 const authRoutes = require("./routes/authRoute");
 const dbConnect = require("./config/dbConnect");
 const userRoutes = require("./routes/userRoute");
+const appointmentRoute = require("./routes/appointmentRoutes");
 
 app.use(express.json())
 app.use(cors({ origin: true }));
