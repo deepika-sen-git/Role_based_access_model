@@ -32,8 +32,11 @@ app.get("/", (req, res) => {
 //     name, phone, email, date, time, role
 // })
 // })
-app.use("/", authRoutes);
-app.use("/", userRoutes);
+// app.use("/", authRoutes);
+// app.use("/", userRoutes);
+app.use("/api/auth", authRoutes);
+app.use("/api/user", userRoutes);
+app.use("/api/appointment", appointmentRoute);
 
 // app.listen(3000, console.log("App is running on port 3000"))
 app.listen(PORT, console.log("App is running on port", PORT))
