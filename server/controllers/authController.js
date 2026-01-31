@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const generateToken = require("../utils/generateToken");
+const sendEmail  = require("../utils/sendEmail");
 
 const registerController = async (req, res) => {
   try {
@@ -53,15 +54,21 @@ const loginController = async (req, res) => {
     }
 
     const isMatched = await bcrypt.compare(password, user.password);
+console.log(isMatched, "isMatched");
 
     if (!isMatched) {
       return res.json({
         message: "Invalid Password",
       });
     }
-
+    
     const token = generateToken(user._id);
-
+    const subject = "Login Success Mail";
+    const html = `
+    <h1>Welcome</h1>
+    <p>Hospital Appointment</p>
+    `
+sendEmail(email, subject, html);
     res.json({
       message: "Login Successful",
       user,
