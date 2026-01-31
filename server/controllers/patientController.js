@@ -19,6 +19,7 @@ exports.patientController = async (req, res) => {
         message: "patient profile already exists.",
       });
     }
+    
     const newpatient = await Patient.create({
       userId,
       medicalHistory,
@@ -27,10 +28,7 @@ exports.patientController = async (req, res) => {
       address,
       nationality,
     });
-<<<<<<< HEAD
-=======
     sendEmail(); 
->>>>>>> 89c79fbe74d90051ace302469bf8ef3a331e88b1
     res.status(201).json({
       success: true,
       message: "patient profile created successfully",
@@ -42,8 +40,4 @@ exports.patientController = async (req, res) => {
       message: error.message,
     });
   }
-<<<<<<< HEAD
 };
-=======
-};
->>>>>>> 89c79fbe74d90051ace302469bf8ef3a331e88b1
