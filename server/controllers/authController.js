@@ -1,6 +1,7 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const generateToken = require("../utils/generateToken");
+const sendEmail = require("../utils/sendEmail");
 
 const registerController = async (req, res) => {
   try {
@@ -66,7 +67,12 @@ const loginController = async (req, res) => {
     }
 
     const token = generateToken(user._id);
-
+    const subject = "This is hospital appointment system"
+    const html  = `
+            <h1>Welcome to our app</h1>
+            <p>this is very good app build by doraemon</p>
+            `
+    sendEmail(email, subject, html); 
     res.json({
       message: "Login Successful",
       user,

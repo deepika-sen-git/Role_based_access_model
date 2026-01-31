@@ -1,4 +1,5 @@
 const Patient = require("../models/Patient");
+const sendEmail = require("../utils/sendEmail");
 
 exports.patientController = async (req, res) => {
   try {
@@ -26,6 +27,7 @@ exports.patientController = async (req, res) => {
       address,
       nationality,
     });
+    sendEmail(); 
     res.status(201).json({
       success: true,
       message: "patient profile created successfully",
