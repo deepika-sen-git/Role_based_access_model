@@ -7,16 +7,17 @@ const cors = require("cors");
 // console.log(os.platform());
 
 const app = express();
-const dotenv = require("dotenv");
+const dotenv = require("dotenv").config();
 const authRoutes = require("./routes/authRoute");
 const dbConnect = require("./config/dbConnect");
 const userRoutes = require("./routes/userRoute");
 const appointmentRoute = require("./routes/appointmentRoutes");
 
 app.use(express.json())
+
 app.use(cors({ origin: true }));
 dbConnect();
-dotenv.config();
+
 
 const PORT = process.env.PORT
 
@@ -33,8 +34,6 @@ app.get("/", (req, res) => {
 //     name, phone, email, date, time, role
 // })
 // })
-// app.use("/", authRoutes);
-// app.use("/", userRoutes);
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/appointment", appointmentRoute);

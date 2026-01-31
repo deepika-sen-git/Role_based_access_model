@@ -109,7 +109,7 @@ exports.getAppointments = async (req, res) => {
       }).sort({appointmentDate: -1})
     }
     else if(userRole === "doctor"){
-      const doctor = await doctor.findOne({userId}); 
+      const doctor = await Doctor.findOne({userId}); 
       if (!doctor) {
         return res.status(404).json({
           success: false,

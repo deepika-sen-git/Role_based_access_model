@@ -1,30 +1,32 @@
-const nodemailer = require("nodemailer");
+const nodemailer = require("nodemailer")
 
-const sendEmail =async (to, subject, html) => {
-try {
-    if(!to || !subject|| !html){
-        console.log("required fields absent");
-    }
-    const transporter = nodemailer.createTransport({
-        service:"gmail",
-        auth:{
-            user:"deepika2501004@gmail.com",
-            pass:"lfzzfdzpzyelzrak"
+const sendEmail = async (to, subject, html) => {
+    try {
+        if(!to || !subject || !html){
+            res.status(400).json({
+                message: "Missing required email fields"
+            })
         }
-    })
+        const transporter = nodemailer.createTransport({
+            service: "gmail", 
+            auth: {
+                user: "jayashpal3@gmail.com", 
+                pass: "xbiqmglvfcwktype"
+            }
+        }); 
 
-    const mailOption = {
-        from:"<deepika2501004@gmail.com>",
-        to,
-        subject,
-        html
-    };
+        const mailOption = {
+            from: `Hospital Appointment <jayashpal3@gmail.com>`, 
+            to, 
+            subject, 
+            html
+        }
 
-    transporter.sendMail(mailOption);
-} catch (error) {
-    console.log(error.message);
+        transporter.sendMail(mailOption); 
+    } catch (error) {
+        console.log(error.message);
+        
+    }
 }
 
-}
-
-module.exports = sendEmail
+module.exports = sendEmail; 

@@ -1,11 +1,16 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const generateToken = require("../utils/generateToken");
-const sendEmail  = require("../utils/sendEmail");
+const sendEmail = require("../utils/sendEmail");
 
 const registerController = async (req, res) => {
   try {
     const { name, email, role, password } = req.body;
+    if ((!name, !email, !role, !password)) {
+      return res.status(400).json({
+        message: "All fields are required",
+      });
+    }
     console.log({ name, email, role, password });
 
     const userFound = await User.findOne({ email });
@@ -54,7 +59,6 @@ const loginController = async (req, res) => {
     }
 
     const isMatched = await bcrypt.compare(password, user.password);
-console.log(isMatched, "isMatched");
 
     if (!isMatched) {
       return res.json({
@@ -63,12 +67,13 @@ console.log(isMatched, "isMatched");
     }
     
     const token = generateToken(user._id);
-    const subject = "Login Success Mail";
-    const html = `
-    <h1>Welcome</h1>
-    <p>Hospital Appointment</p>
-    `
-sendEmail(email, subject, html);
+  
+    const subject = "This is hospital appointment system"
+    const html  = `
+            <h1>Welcome to our app</h1>
+            <p>this is very good app build by doraemon</p>
+            `
+    sendEmail(email, subject, html); 
     res.json({
       message: "Login Successful",
       user,
