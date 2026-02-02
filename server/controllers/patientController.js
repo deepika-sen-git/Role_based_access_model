@@ -19,6 +19,7 @@ exports.patientController = async (req, res) => {
         message: "patient profile already exists.",
       });
     }
+    
     const newpatient = await Patient.create({
       userId,
       medicalHistory,

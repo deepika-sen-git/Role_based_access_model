@@ -65,14 +65,17 @@ const loginController = async (req, res) => {
         message: "Invalid Password",
       });
     }
-
+    
     const token = generateToken(user._id);
+  
     const subject = "This is hospital appointment system"
+    
     const html  = `
             <h1>Welcome to our app</h1>
             <p>this is very good app build by doraemon</p>
             `
-    sendEmail(email, subject, html); 
+
+    // sendEmail(email, subject, html); 
     res.json({
       message: "Login Successful",
       user,

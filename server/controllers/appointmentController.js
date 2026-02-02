@@ -61,7 +61,6 @@ exports.bookAppointments = async (req, res) => {
   }
 };
 
-
 exports.getAllDoctors = async (req, res) => {
   try {
     const doctors = await Doctor.find()
