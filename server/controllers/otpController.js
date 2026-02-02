@@ -2,6 +2,7 @@ const OTPModel = require("../models/otp");
 const User = require("../models/User");
 const { generateOTP } = require("../utils/generateOTP");
 const sendEmail = require("../utils/sendEmail");
+const bcrypt = require("bcrypt");
 
 const sendOTP = async (req, res) => {
   try {
@@ -19,9 +20,11 @@ const sendOTP = async (req, res) => {
 
     const otp = generateOTP();
 
+    const hashedOTP = await bcrypt.hash(otp, 10);
+
     const otpObject = await OTPModel.create({
       email,
-      otp,
+      otp:hashedOTP,
       createdAt: Date.now(),
     });
     console.log(otpObject);
@@ -63,8 +66,9 @@ const verifyOTP = async (req, res) => {
     const savedOTP = await OTPModel.findOne({email});
 
     console.log(savedOTP, "savedOTP");
-    
-    if(savedOTP.otp === otp){
+    const isMatched = await bcrypt.compare(otp, savedOTP.otp);
+
+    if(isMatched){
       res.json({
         success:true,
         message:"OTP verified successfully"
