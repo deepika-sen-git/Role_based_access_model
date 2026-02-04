@@ -3,31 +3,39 @@ const User = require("../models/User");
 const { generateOTP } = require("../utils/generateOTP");
 const sendEmail = require("../utils/sendEmail");
 const bcrypt = require("bcrypt");
+const TempUser = require("../models/TempUser");
+const generateToken = require("../utils/generateToken");
+const { createUser } = require("../services/userService");
 
-const sendOTP = async (req, res) => {
+const sendOTP = async (email) => {
   try {
-    const { email } = req.body;
-    const userId = req.user._id;
+    // const userId = req.user._id;
 
-    const user = await User.findOne({_id:userId, email});
-    console.log(user, "user");
+    const tempUser = await TempUser.findOne({ email });
+    // console.log(user, "user");
 
-    if (!user) {
-      return res.json({
-        message: "User does not exist, please register first",
-      });
-    }
+    // if (!user) {
+    //   return res.json({
+    //     message: "User does not exist, please register first",
+    //   });
+    // }
 
     const otp = generateOTP();
 
-    const hashedOTP = await bcrypt.hash(otp, 10);
+    const hashedOTP = await bcrypt.hash(otp.toString(), 10);
+    const otpObject = await OTPModel.findOne({ email });
 
-    const otpObject = await OTPModel.create({
-      email,
-      otp:hashedOTP,
-      createdAt: Date.now(),
-    });
-    console.log(otpObject);
+    if (otpObject) {
+      otpObject.otp = hashedOTP;
+
+      await otpObject.save();
+    } else {
+      await OTPModel.create({
+        email,
+        otp: hashedOTP,
+        createdAt: Date.now(),
+      });
+    }
 
     const subject = "This is from hospital appointment system";
 
@@ -38,47 +46,64 @@ const sendOTP = async (req, res) => {
 
     sendEmail(email, subject, html);
 
-    res.status(200).json({
-      success: true,
-      message: "OTP sent successfully",
-    });
+    // res.status(200).json({
+    //   success: true,
+    //   message: "OTP sent successfully",
+    // });
   } catch (error) {
-    res.json({
-      error: error.message,
-    });
+    // res.json({
+    //   error: error.message,
+    // });
   }
 };
 
 const verifyOTP = async (req, res) => {
   try {
     const { email, otp } = req.body;
-    const userId = req.user._id;
+    // const userId = req.user._id;
 
-    const user = await User.findOne({_id:userId, email});
-    console.log(user, "user");
+    // const user = await User.findOne({ _id: userId, email });
+    const tempUser = await TempUser.findOne({ email });
+    console.log(tempUser, "user");
 
-    if (!user) {
+    if (!tempUser) {
       return res.json({
         message: "User does not exist, please register first",
       });
     }
 
-    const savedOTP = await OTPModel.findOne({email});
+    const savedOTP = await OTPModel.findOne({ email });
 
     console.log(savedOTP, "savedOTP");
+    if (!savedOTP) {
+  return res.json({
+    success: false,
+    message: "OTP expired or not found",
+  });
+}
+
     const isMatched = await bcrypt.compare(otp, savedOTP.otp);
 
-    if(isMatched){
+    if (isMatched) {
+      await savedOTP.deleteOne();
+      console.log(createUser, "createUser");
+      
+      const user = await createUser(tempUser);
+       await TempUser.deleteOne({ email });
+      const token = generateToken(user._id);
+      
       res.json({
-        success:true,
-        message:"OTP verified successfully"
-      })
-    }
-    else{
+        success: true,
+        message: "OTP verified successfully and User created successfully",
+        // message: "User created successfully",
+        user,
+        token,
+      });
+    } else {
       res.json({
-         success:false,
-        message:"Invalid OTP"
-      })
+        success: false,
+        message: "Invalid OTP",
+      });
     }
   } catch (error) {
     res.json({

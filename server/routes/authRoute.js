@@ -8,7 +8,7 @@ const Router = express.Router();
 
 Router.post("/register", registerController);
 Router.post("/login", loginController);
-Router.post("/send-otp",authMiddleware,  sendOTP);
-Router.post("/verify-otp", authMiddleware, verifyOTP);
+// Router.post("/send-otp",authMiddleware,  sendOTP);
+Router.post("/verify-otp", verifyOTP);
 
 module.exports = Router;
