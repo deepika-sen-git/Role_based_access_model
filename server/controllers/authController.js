@@ -4,16 +4,15 @@ const generateToken = require("../utils/generateToken");
 const sendEmail = require("../utils/sendEmail");
 const TempUser = require("../models/TempUser");
 const { sendOTP } = require("./otpController");
+const asyncHandler = require("express-async-handler")
 
 // register --> temp User create(unverified) --> sendOTP --> verify OTP --> User create(verified)
 
-const registerController = async (req, res) => {
-  try {
+const registerController = asyncHandler(async (req, res) => {
     const { name, email, role, password } = req.body;
-    if ((!name, !email, !role, !password)) {
-      return res.status(400).json({
-        message: "All fields are required",
-      });
+    if ((!name || !email || !role || !password)) {
+    //  res.status(400); 
+     throw new Error("All fields are required");  
     }
     console.log({ name, email, role, password });
 
@@ -66,12 +65,7 @@ const registerController = async (req, res) => {
         "Please verify your registered email, Otp sent successfully to your email",
       success: true,
     });
-  } catch (error) {
-    res.json({
-      error: error.message,
-    });
-  }
-};
+});
 
 const loginController = async (req, res) => {
   try {

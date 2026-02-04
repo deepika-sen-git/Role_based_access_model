@@ -12,6 +12,7 @@ const authRoutes = require("./routes/authRoute");
 const dbConnect = require("./config/dbConnect");
 const userRoutes = require("./routes/userRoute");
 const appointmentRoute = require("./routes/appointmentRoutes");
+const errorHandler = require("./middlewares/errorHandler");
 
 app.use(express.json())
 
@@ -37,6 +38,8 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/appointment", appointmentRoute);
+
+app.use(errorHandler)
 
 // app.listen(3000, console.log("App is running on port 3000"))
 app.listen(PORT, console.log("App is running on port", PORT))

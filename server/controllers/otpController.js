@@ -76,7 +76,7 @@ const verifyOTP = async (req, res) => {
       });
     }
 
-    const OTP_EXPIRY_TIME = 60 * 1000;
+    const OTP_EXPIRY_TIME = 10 * 60 * 1000;
     const expiryTime = savedOTP.createdAt.getTime() + OTP_EXPIRY_TIME;
 
     if (Date.now() > expiryTime) {
