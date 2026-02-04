@@ -21,7 +21,9 @@ const registerController = async (req, res) => {
     if (tempUserFound) {
       sendOTP(email);
       return res.json({
-        message: "User already registered with this email, please verify user",
+        message:
+          "Please verify your registered email, Otp sent successfully to your email",
+        success: true,
       });
     }
 
@@ -47,6 +49,7 @@ const registerController = async (req, res) => {
       role,
       password: hashedPassword,
     });
+
     sendOTP(email);
 
     // const token = generateToken(user._id);
@@ -59,9 +62,8 @@ const registerController = async (req, res) => {
     // });
 
     res.json({
-      message: "User registered successfully, OTP sent to your registered email",
-      user: tempUser,
-      // token,
+      message:
+        "Please verify your registered email, Otp sent successfully to your email",
       success: true,
     });
   } catch (error) {
@@ -134,7 +136,7 @@ const loginController = async (req, res) => {
 //     return user;
 //  } catch (error) {
 //   console.log(error.message);
-  
+
 //  }
 // };
 

@@ -1,4 +1,3 @@
-const OTPModel = require("../models/otp");
 const User = require("../models/User");
 const { generateOTP } = require("../utils/generateOTP");
 const sendEmail = require("../utils/sendEmail");
@@ -6,12 +5,12 @@ const bcrypt = require("bcrypt");
 const TempUser = require("../models/TempUser");
 const generateToken = require("../utils/generateToken");
 const { createUser } = require("../services/userService");
+const OTPModel = require("../models/Otp");
 
 const sendOTP = async (email) => {
   try {
     // const userId = req.user._id;
 
-    const tempUser = await TempUser.findOne({ email });
     // console.log(user, "user");
 
     // if (!user) {
@@ -60,54 +59,65 @@ const sendOTP = async (email) => {
 const verifyOTP = async (req, res) => {
   try {
     const { email, otp } = req.body;
-    // const userId = req.user._id;
 
-    // const user = await User.findOne({ _id: userId, email });
     const tempUser = await TempUser.findOne({ email });
-    console.log(tempUser, "user");
-
     if (!tempUser) {
-      return res.json({
+      return res.status(404).json({
+        success: false,
         message: "User does not exist, please register first",
       });
     }
 
-    const savedOTP = await OTPModel.findOne({ email });
-
-    console.log(savedOTP, "savedOTP");
+    const savedOTP = await OTPModel.findOne({ email }).sort({ createdAt: -1 });
     if (!savedOTP) {
-  return res.json({
-    success: false,
-    message: "OTP expired or not found",
-  });
-}
+      return res.status(404).json({
+        success: false,
+        message: "OTP not found",
+      });
+    }
+
+    const OTP_EXPIRY_TIME = 60 * 1000;
+    const expiryTime = savedOTP.createdAt.getTime() + OTP_EXPIRY_TIME;
+
+    if (Date.now() > expiryTime) {
+      await savedOTP.deleteOne();
+      return res.status(400).json({
+        success: false,
+        message: "OTP expired",
+      });
+    }
 
     const isMatched = await bcrypt.compare(otp, savedOTP.otp);
-
-    if (isMatched) {
-      await savedOTP.deleteOne();
-      console.log(createUser, "createUser");
-      
-      const user = await createUser(tempUser);
-       await TempUser.deleteOne({ email });
-      const token = generateToken(user._id);
-      
-      res.json({
-        success: true,
-        message: "OTP verified successfully and User created successfully",
-        // message: "User created successfully",
-        user,
-        token,
-      });
-    } else {
-      res.json({
+    if (!isMatched) {
+      return res.status(400).json({
         success: false,
         message: "Invalid OTP",
       });
     }
+
+    await savedOTP.deleteOne();
+
+    const user = await User.create({
+      name: tempUser.name,
+      email: tempUser.email,
+      role: tempUser.role,
+      password: tempUser.password,
+    });
+
+    await tempUser.deleteOne();
+
+    const token = generateToken(user._id);
+
+    return res.status(201).json({
+      success: true,
+      message: "OTP verified and user created successfully",
+      user,
+      token,
+    });
   } catch (error) {
-    res.json({
-      error: error.message,
+    return res.status(500).json({
+      success: false,
+      message: error.message,
     });
   }
 };
