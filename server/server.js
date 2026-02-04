@@ -16,7 +16,9 @@ const errorHandler = require("./middlewares/errorHandler");
 
 app.use(express.json())
 
-app.use(cors({ origin: true }));
+app.use(cors({ 
+    origin: process.env.CLIENT_URL
+ }));
 dbConnect();
 
 
