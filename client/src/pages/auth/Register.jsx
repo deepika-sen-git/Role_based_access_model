@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 export const Register = () => {
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(false); 
+  const [loading, setLoading] = useState(false);
+  const [otpVisible, setOtpVisible] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -20,20 +21,24 @@ export const Register = () => {
   };
 
   const handleSubmit = async (e) => {
-    setLoading(true); 
+    setLoading(true);
     e.preventDefault();
     try {
       const res = await axios.post(
         "https://appointment-system-xiyl.onrender.com/api/auth/register",
-        formData
+        formData,
       );
-      setLoading(false)
+      if (res.data.success) {
+        setOtpVisible(true);
+      }
+      setLoading(false);
+
       localStorage.setItem("token", res.data.token);
       console.log(res.data);
-      
+
       alert(res.data.message);
     } catch (error) {
-      setLoading(false); 
+      setLoading(false);
       alert(error.response?.data?.message || "Something went wrong");
     }
   };
@@ -131,7 +136,7 @@ export const Register = () => {
           type="submit"
           className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
         >
-          {loading? "loading...": "Create Account"}
+          {loading ? "loading..." : "Create Account"}
         </button>
       </form>
     </div>
