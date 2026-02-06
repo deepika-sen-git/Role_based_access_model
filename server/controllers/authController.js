@@ -52,7 +52,7 @@ const registerController = asyncHandler(async (req, res) => {
       password: hashedPassword,
     });
 
-    sendOTP(email);
+    await sendOTP(email);
 
     // const token = generateToken(user._id);
 
