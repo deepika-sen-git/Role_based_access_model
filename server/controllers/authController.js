@@ -18,9 +18,7 @@ const registerController = asyncHandler(async (req, res) => {
 
     const tempUserFound = await TempUser.findOne({ email });
     if (tempUserFound) {
-     await sendOTP(email);
-     console.log(otp);
-     
+     await sendOTP(email);   
       return res.json({
         message:
           "Please verify your registered email, Otp sent successfully to your email",
