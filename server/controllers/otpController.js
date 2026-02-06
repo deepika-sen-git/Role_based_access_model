@@ -49,7 +49,6 @@ const sendOTP = async (email) => {
     //   success: true,
     //   message: "OTP sent successfully",
     // });
-    return otp
   } catch (error) {
     // res.json({
     //   error: error.message,
