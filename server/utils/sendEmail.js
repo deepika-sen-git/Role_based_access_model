@@ -46,7 +46,7 @@ const sendEmail = async (to, subject, html) => {
       to,
       from: {
         name: "Hospital Appointment",
-        email: "wddeepikasen@gmail.com"
+        email: "jayashpal3@gmail.com"
       },
       subject,
       html

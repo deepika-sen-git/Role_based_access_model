@@ -4,6 +4,9 @@ import { Register } from "./pages/auth/Register";
 import { Login } from "./pages/auth/Login";
 import { Profile } from "./pages/profile/Profile";
 import { Navbar } from "./components/common/Navbar";
+import { PatientDetail } from "./pages/onboarding/PatientDetail";
+import PatientDashboard from "./pages/dashboard/PatientDashboard";
+
 
 function App() {
   return (
@@ -14,6 +17,8 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/profile" element={<Profile />} />
+        <Route path="/patient-detail" element={<PatientDetail />} />
+        <Route path="/patient-dashboard" element={<PatientDashboard />} />
       </Routes>
     </div>
   );

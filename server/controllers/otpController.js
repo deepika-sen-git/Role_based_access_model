@@ -43,7 +43,7 @@ const sendOTP = async (email) => {
             <p>OTP: ${otp}</p>
             `;
 
-    sendEmail(email, subject, html);
+   await sendEmail(email, subject, html);
 
     // res.status(200).json({
     //   success: true,

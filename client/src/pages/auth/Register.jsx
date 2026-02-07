@@ -10,6 +10,7 @@ export const Register = () => {
     name: "",
     email: "",
     password: "",
+    otp: "",
     role: "",
   });
 
@@ -20,12 +21,12 @@ export const Register = () => {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const sendOtp = async (e) => {
     setLoading(true);
     e.preventDefault();
     try {
       const res = await axios.post(
-        "https://appointment-system-xiyl.onrender.com/api/auth/register",
+        "http://localhost:3000/api/auth/register",
         formData,
       );
       if (res.data.success) {
@@ -33,7 +34,6 @@ export const Register = () => {
       }
       setLoading(false);
 
-      localStorage.setItem("token", res.data.token);
       console.log(res.data);
 
       alert(res.data.message);
@@ -43,10 +43,31 @@ export const Register = () => {
     }
   };
 
+  const verifyOtp = async (e) => {
+    setLoading(true);
+    e.preventDefault();
+    try {
+      const res = await axios.post(
+        "http://localhost:3000/api/auth/verify-otp",
+        { email: formData.email, otp: formData.otp },
+      );
+      setLoading(false);
+
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", formData.role);
+      console.log(res.data);
+
+      alert(res.data.message);
+      navigate("/patient-detail");
+    } catch (error) {
+      setLoading(false);
+      alert(error.response?.data?.message || "Something went wrong");
+    }
+  };
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100">
       <form
-        onSubmit={handleSubmit}
         className="w-full max-w-md bg-white p-6 rounded-xl shadow-lg"
       >
         <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">
@@ -98,6 +119,23 @@ export const Register = () => {
           />
         </div>
 
+        {/* OTP */}
+        {otpVisible && (
+          <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-600 mb-1">
+              OTP
+            </label>
+            <input
+              type="text"
+              name="otp"
+              required
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+              placeholder="••••••••"
+            />
+          </div>
+        )}
+
         {/* Role */}
         <div className="mb-6">
           <label className="block text-sm font-medium text-gray-600 mb-2">
@@ -132,12 +170,19 @@ export const Register = () => {
         </div>
 
         {/* Button */}
-        <button
-          type="submit"
+        {!otpVisible &&  <button
+          onClick={sendOtp}
           className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
         >
           {loading ? "loading..." : "Create Account"}
-        </button>
+        </button>}
+
+       { otpVisible && <button
+          onClick={verifyOtp}
+          className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+        >
+          {loading ? "loading..." : "Submit"}
+        </button> }
       </form>
     </div>
   );
