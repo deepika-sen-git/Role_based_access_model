@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import apiInstance from "../../utils/apiInstance";
 
 export const Register = () => {
   const navigate = useNavigate();
@@ -25,10 +26,12 @@ export const Register = () => {
     setLoading(true);
     e.preventDefault();
     try {
-      const res = await axios.post(
-        "http://localhost:3000/api/auth/register",
-        formData,
-      );
+      // const res = await axios.post(
+      //   "http://localhost:3000/api/auth/register",
+      //   formData,
+      // );
+      const res = await apiInstance.post('/auth/register', formData);
+
       if (res.data.success) {
         setOtpVisible(true);
       }
@@ -47,18 +50,26 @@ export const Register = () => {
     setLoading(true);
     e.preventDefault();
     try {
-      const res = await axios.post(
-        "http://localhost:3000/api/auth/verify-otp",
-        { email: formData.email, otp: formData.otp },
-      );
+      // const res = await axios.post(
+      //   "http://localhost:3000/api/auth/verify-otp",
+      //   { email: formData.email, otp: formData.otp },
+      // );
+      const res = await apiInstance.post('/auth/verify-otp',  { email: formData.email, otp: formData.otp });
+
       setLoading(false);
 
-      localStorage.setItem("token", res.data.token);
-      localStorage.setItem("user", formData.role);
+      // localStorage.setItem("token", res.data.token);
+      // localStorage.setItem("role", formData.role);
       console.log(res.data);
 
       alert(res.data.message);
-      navigate("/patient-detail");
+      if(res.data.user.role === "doctor"){
+ navigate("/doctor-detail");
+      }
+      else if(res.data.user.role === "patient"){
+ navigate("/patient-detail");
+      }
+     
     } catch (error) {
       setLoading(false);
       alert(error.response?.data?.message || "Something went wrong");

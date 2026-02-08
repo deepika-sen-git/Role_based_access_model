@@ -106,13 +106,13 @@ const verifyOTP = async (req, res) => {
 
     await tempUser.deleteOne();
 
-    const token = generateToken(user._id);
+    generateToken(user._id, res);
 
     return res.status(201).json({
       success: true,
       message: "OTP verified and user created successfully",
       user,
-      token,
+      // token,
     });
   } catch (error) {
     return res.status(500).json({

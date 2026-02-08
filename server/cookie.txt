@@ -1,0 +1,9 @@
+browser storages
+
+cookie: least storage, can communicate to both frontend and backend, 
+
+localstorage: permanent storage, less secure, more storage
+
+sessionStorage: tab based, data stored on a tab cannot be accessed to another tab of same website, more secure, less storage
+
+npm i cookie-parser

@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import apiInstance from "../../utils/apiInstance";
 
 export const PatientDetail = () => {
   const [loading, setLoading] = useState(false); 
@@ -10,7 +11,7 @@ export const PatientDetail = () => {
     age: "",
     gender: "",
     address: "",
-    nationality: "",
+    nationality: ""
   });
   const token = localStorage.getItem("token");
 
@@ -25,21 +26,25 @@ export const PatientDetail = () => {
     e.preventDefault();
     setLoading(true); 
     try {
-      const res = await axios.post(
-        "http://localhost:3000/api/user/patient-detail",
-         patientDetail,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
-      );
+      // const res = await axios.post(
+      //   "http://localhost:3000/api/user/patient-detail",
+      //    patientDetail,
+      //   {
+      //     headers: {
+      //       Authorization: `Bearer ${token}`,
+      //     },
+      //   },
+      // );
+      const res = await apiInstance.post("/user/patient-detail", patientDetail)
      if (!res.data.success) {
         setLoading(false); 
         return alert(res.data.message)
      }
       setLoading(false); 
       console.log(res.data);
+      
+      localStorage.setItem("role", "patient");
+      localStorage.setItem("isAuthenticated", true);
       navigate("/patient-dashboard"); 
     } catch (error) {
       console.log(error.response.data.message);

@@ -89,7 +89,7 @@ const loginController = async (req, res) => {
       });
     }
 
-    const token = generateToken(user._id);
+    generateToken(user._id, res);
 
     const subject = "This is hospital appointment system";
 
@@ -102,7 +102,7 @@ const loginController = async (req, res) => {
     res.json({
       message: "Login Successful",
       user,
-      token,
+      // token,
       success: true,
     });
   } catch (error) {
