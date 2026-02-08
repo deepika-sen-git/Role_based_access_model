@@ -77,10 +77,7 @@ export const Register = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <form
-        className="w-full max-w-md bg-white p-6 rounded-xl shadow-lg"
-      >
+    <div>
         <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">
           Register
         </h1>
@@ -194,7 +191,6 @@ export const Register = () => {
         >
           {loading ? "loading..." : "Submit"}
         </button> }
-      </form>
     </div>
   );
 };

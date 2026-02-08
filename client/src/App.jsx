@@ -19,12 +19,12 @@ function App() {
         <Route element= {<AuthRoutes/>}>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-
+          <Route path="/patient-detail" element={<PatientDetail />} />
+          <Route path="/doctor-detail" element={<DoctorDetail />} />
         </Route>
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Home />} />
-          <Route path="/patient-detail" element={<PatientDetail />} />
-          <Route path="/doctor-detail" element={<DoctorDetail />} />
+          
           <Route path="/profile" element={<Profile />} />
           <Route path="/patient-dashboard" element={<PatientDashboard />} />
           <Route path="/doctor-dashboard" element={<DoctorDashboard />} />
